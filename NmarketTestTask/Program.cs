@@ -14,7 +14,7 @@ namespace NmarketTestTask
         {
             Directory.CreateDirectory("Result");
 
-            //ParseAllFiles(new ExcelParser(), @"Files\Excel");
+            ParseAllFiles(new ExcelParser(), @"Files\Excel");
             ParseAllFiles(new HtmlParser(), @"Files\Html");
         }
 

@@ -1,6 +1,7 @@
 ﻿using ClosedXML.Excel;
 using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml.Wordprocessing;
+using NmarketTestTask.Config;
 using NmarketTestTask.Models;
 using System;
 using System.Collections.Generic;
@@ -19,7 +20,7 @@ namespace NmarketTestTask.Parsers
             var sheet = workbook.Worksheets.First();
 
             var numberCells = sheet.Cells()
-                            .Where(c => c.GetValue<string>().Contains("№"))
+                            .Where(c => c.GetValue<string>().Contains(ExcelParserConfig.FlatMarker))
                             .ToList();
 
             houses.AddRange(FillHouses(sheet));
@@ -45,7 +46,7 @@ namespace NmarketTestTask.Parsers
             {
                 string cellValue = cell.GetValue<string>();
 
-                string numberPart = cellValue.Replace("№", "").Trim();
+                string numberPart = cellValue.Replace(ExcelParserConfig.FlatMarker, "").Trim();
 
                 if (int.TryParse(numberPart, out int number))
                 {
@@ -92,11 +93,10 @@ namespace NmarketTestTask.Parsers
             var houses = new List<House>();
 
             var houseNameCells = sheet.Cells()
-                .Where(c => c.GetValue<string>().StartsWith("Дом"))
+                .Where(c => c.GetValue<string>().StartsWith(ExcelParserConfig.HouseMarker))
                 .OrderBy(c => c.Address.RowNumber)
                 .ToList();
 
-            // Для каждого дома
             for (int houseIndex = 0; houseIndex < houseNameCells.Count; houseIndex++)
             {
                 var currentHouseCell = houseNameCells[houseIndex];
@@ -114,7 +114,7 @@ namespace NmarketTestTask.Parsers
 
                 var numberCells = sheet.Range(startRow, 1, endRow, sheet.LastColumnUsed().ColumnNumber())
                     .Cells()
-                    .Where(c => c.GetValue<string>().Contains("№"))
+                    .Where(c => c.GetValue<string>().Contains(ExcelParserConfig.FlatMarker))
                     .ToList();
 
                 var numbers = GetFlatsNumbers(numberCells);
