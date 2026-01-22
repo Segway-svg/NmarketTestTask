@@ -61,6 +61,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Config\ExcelParserConfig.cs" />
+    <Compile Include="Config\HtmlParserConfig.cs" />
     <Compile Include="Models\Flat.cs" />
     <Compile Include="Models\House.cs" />
     <Compile Include="Parsers\ExcelParser.cs" />

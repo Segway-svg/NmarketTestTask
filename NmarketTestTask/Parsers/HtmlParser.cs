@@ -1,4 +1,5 @@
 ﻿using HtmlAgilityPack;
+using NmarketTestTask.Config;
 using NmarketTestTask.Models;
 using System;
 using System.Collections.Generic;
@@ -17,11 +18,11 @@ namespace NmarketTestTask.Parsers
             var doc = new HtmlDocument();
             doc.Load(path);
 
-            var headerNode = doc.DocumentNode.SelectSingleNode("//thead");
-            var headerCells = doc.DocumentNode.SelectNodes(".//th");
+            var headerNode = doc.DocumentNode.SelectSingleNode(HtmlParserConfig.TheadNode);
+            var headerCells = doc.DocumentNode.SelectNodes(HtmlParserConfig.ThNode);
 
-            var rows = doc.DocumentNode.SelectNodes("//tbody/tr") ??
-                      doc.DocumentNode.SelectNodes("//tr[td]");
+            var rows = doc.DocumentNode.SelectNodes(HtmlParserConfig.TbodyNode) ??
+                      doc.DocumentNode.SelectNodes(HtmlParserConfig.TrNode);
 
             if (rows == null)
             {
@@ -30,7 +31,7 @@ namespace NmarketTestTask.Parsers
 
             var dataRows = rows.Where(r =>
             {
-                var thCells = r.SelectNodes(".//th");
+                var thCells = r.SelectNodes(HtmlParserConfig.ThNode);
                 return thCells == null || thCells.Count == 0;
             }).ToList();
 
@@ -104,7 +105,7 @@ namespace NmarketTestTask.Parsers
                 return "0";
             }
 
-            priceText = priceText.Replace(" руб.", "")
+            priceText = priceText.Replace(HtmlParserConfig.Currency, "")
                                  .Replace(" ", "")
                                  .Replace(" ", "");
 
@@ -120,7 +121,7 @@ namespace NmarketTestTask.Parsers
 
             if (string.IsNullOrEmpty(clean))
             {
-                return "0";
+                return HtmlParserConfig.DefaultPrice;
             }
 
             clean = clean.Replace(",", ".");
@@ -131,7 +132,7 @@ namespace NmarketTestTask.Parsers
                 return price.ToString(CultureInfo.InvariantCulture);
             }
 
-            return "0";
+            return HtmlParserConfig.DefaultPrice;
         }
     }
 }
