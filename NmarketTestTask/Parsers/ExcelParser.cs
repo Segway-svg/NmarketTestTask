@@ -95,7 +95,7 @@ namespace NmarketTestTask.Parsers
             return prices;
         }
 
-        public IList<House> FillHouses(IXLWorksheet sheet)
+        private IList<House> FillHouses(IXLWorksheet sheet)
         {
             var houses = new List<House>();
 
