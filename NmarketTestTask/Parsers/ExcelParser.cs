@@ -19,9 +19,7 @@ namespace NmarketTestTask.Parsers
             var workbook = new XLWorkbook(path);
             var sheet = workbook.Worksheets.First();
 
-            var numberCells = sheet.Cells()
-                            .Where(c => c.GetValue<string>().Contains(ExcelParserConfig.FlatMarker))
-                            .ToList();
+            var numberCells = GetCells(sheet);
 
             houses.AddRange(FillHouses(sheet));
 
@@ -36,6 +34,15 @@ namespace NmarketTestTask.Parsers
             #endregion
 
             return houses;
+        }
+
+        private static List<IXLCell> GetCells(IXLWorksheet sheet)
+        {
+            var numberCells = sheet.Cells()
+                .Where(c => c.GetValue<string>().Contains(ExcelParserConfig.FlatMarker))
+                .ToList();
+
+            return numberCells;
         }
 
         private static List<string> GetFlatsNumbers(List<IXLCell> numberCells)
